@@ -27,16 +27,16 @@
             switch (userChoice)
             {
                 case 1:
-                    Console.WriteLine("");
+                    AccAndBalance();
                     break;
                 case 2:
-                    Console.WriteLine("");
+                    TransferMoney();
                     break;
                 case 3:
-                    Console.WriteLine("");
+                    WithdrawMoney();
                     break;
                 case 4:
-                    Console.WriteLine("");
+                    LogOut();
                     break;
                 default:
                     break;
@@ -44,6 +44,21 @@
             }
             
         }
-        
+        static void AccAndBalance()
+        {
+
+        }
+        static void TransferMoney()
+        {
+
+        }
+        static void WithdrawMoney()
+        {
+
+        }
+        static void LogOut()
+        {
+
+        }
     }
 }
