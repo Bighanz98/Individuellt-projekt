@@ -4,29 +4,45 @@ namespace Individuellt_projekt
 {
     internal class Program
     {
-        static string[] userAccounts = { "Anton", "Adam", "Simon", "Petter", "Linus" };
-        static string[] userPinCodes = { "1111", "2222", "3333", "4444", "5555" };
-        static string[] userAccAndBalance = { "Sparkonto", "Semsterkonto", "Spelkonto", "Sparkonto", "konto"};
+        static string[] userAccounts = { "Anton", "Adam", "Simon", "Petter", "Linus" }; // Array till användare.
+        static string[] userPinCodes = { "1111", "2222", "3333", "4444", "5555" }; // Array för PIN-koder.
+        static string[][] userSavingsAcc = { // Jagged Array, eller "array of arrays" för sparkonton.
+            new string [] {"Sparkonto", "Semesterkonto", "Spelkonto", "Bensinkonto", "Oförutsägbara utgifter"},
+            new string [] {"Sparkonto", "Semesterkonto", "Spelkonto", "Bensinkonto"},
+            new string [] {"Sparkonto", "Semesterkonto", "Spelkonto"},
+            new string [] {"Sparkonto", "Semesterkonto"},
+            new string [] {"Sparkonto"}
+        };
+        static double[][] userBalance = { //Jagged array för pengarna som finns på alla konton.
+            new double [] {50000, 10000, 2000, 3000, 5000},
+            new double [] {20000, 3000, 500, 1000},
+            new double [] {1000, 7000, 15000},
+            new double [] {100000, 30000},
+            new double [] {25000}
+        };
+        
         static void Main(string[] args)
         {
+            Console.BackgroundColor = ConsoleColor.Yellow; //Kod som välkomnar avändaren till banken.
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.WriteLine("------------------------");
+            Console.WriteLine("                        ");
+            Console.WriteLine(" Välkommen till banken! ");
+            Console.WriteLine("                        ");
+            Console.WriteLine("------------------------");
+            Console.ResetColor();
 
-            Console.WriteLine("----------------------");
-            Console.WriteLine("Välkommen till banken!");
-            Console.WriteLine("----------------------");
-
-            LogIn();
-
+            LogIn(); //Inloggningsmetod.
 
             Console.ReadKey();
         }
-        static void LogIn()
-        {
-            bool loggedIn = false;
+        static void LogIn() //Inloggningsmetod.
+        {          
             int maxLogAttempts = 3;
-
-            while (!loggedIn && maxLogAttempts > 0)
+           
+            while (maxLogAttempts > 0)
             {
-                Console.Write("Logga in med din PIN-kod:");
+                Console.Write("\nLogga in med din PIN-kod:");
                 string userPIN = Console.ReadLine();
 
                 for (int i = 0; i < userPinCodes.Length; i++)
@@ -35,22 +51,31 @@ namespace Individuellt_projekt
                     {
                         Console.Clear();
                         Console.WriteLine($"Hej, {userAccounts[i]}!");                      
-                        loggedIn = true;
-                        BankMenu();
-                        break;                       
+                        BankMenu(i);
+                        return;                       
                     }
                 }
-                if (!loggedIn) 
+              maxLogAttempts--;
+
+                if (maxLogAttempts > 0) 
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine($"\nFelaktig PIN-kod! Försök igen, du har {maxLogAttempts} försök kvar");
-                    Console.ResetColor();
-                    maxLogAttempts--;
+                    Console.ResetColor();                    
+                    
+                }
+                else
+                {
+                    Console.ForegroundColor= ConsoleColor.Red;
+                    Console.WriteLine("\nAjdå! Det verkar som att du har skrivit in fel PIN-kod för många gånger.");
+                    Console.WriteLine("Klicka på valfri tangent för att avsluta.");
+                    Console.ResetColor();               
+                    
                 }
                
             }
             
-            static void BankMenu()
+            static void BankMenu(int userRegister)
             {
                 Console.WriteLine("\n1. Se dina konton och saldo ");
                 Console.WriteLine("2. Överföring mellan konton");
@@ -66,10 +91,10 @@ namespace Individuellt_projekt
                     switch (userChoice)
                     {
                         case 1:
-                            AccAndBalance();
+                            AccAndBalance(userRegister);
                             break;
                         case 2:
-                            TransferMoney();
+                            TransferMoney(userRegister);
                             break;
                         case 3:
                             WithdrawMoney();
@@ -93,17 +118,25 @@ namespace Individuellt_projekt
                     Console.ResetColor();
                 }
 
-                static void AccAndBalance()
+                static void AccAndBalance(int userRegister)
                 {
-                    for (int i = 0; i < userAccAndBalance.Length; i++)
-                    {
-                        
-                        Console.Clear();
-                        Console.WriteLine($"Konton: {userAccAndBalance[i]} ");
+                    Console.Clear();
+                    Console.WriteLine($"Konto och saldo för {userAccounts[userRegister]} ");
+                    for (int i = 0; i < userSavingsAcc[userRegister].Length; i++)
+                    {                                               
+                        Console.WriteLine($"{userSavingsAcc[userRegister][i]}: {userBalance[userRegister][i]} kr ");                        
                     }
+                    Console.ForegroundColor= ConsoleColor.Green;
+                    Console.WriteLine("\nKlicka enter för att komma till huvudmenyn.");
+                    Console.ResetColor();
+                    Console.ReadKey();                    
                 }
-                static void TransferMoney()
+                Console.Clear();
+                BankMenu(userRegister);
+
+                static void TransferMoney(int userRegister)
                 {
+                    Console.WriteLine("Välj ett konto att överföra pengar från: ");
 
                 }
                 static void WithdrawMoney()
@@ -112,10 +145,11 @@ namespace Individuellt_projekt
                 }
                 static void LogOut()
                 {
-                    Console.ForegroundColor= ConsoleColor.Green;
+                    Console.ForegroundColor= ConsoleColor.Red;
                     Console.WriteLine("Loggar ut...");
+                    Console.ResetColor();
                     Thread.Sleep(3000);
-                    Console.Clear();
+                    Console.Clear();                    
                     LogIn();
                 }
             }
