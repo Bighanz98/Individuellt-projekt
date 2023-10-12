@@ -4,6 +4,8 @@ namespace Individuellt_projekt
 {
     internal class Program
     {
+        //Anton Hansson SUT23
+
         static string[] userAccounts = { "Anton", "Adam", "Simon", "Petter", "Linus" }; // Array till användare.
         static string[] userPinCodes = { "1111", "2222", "3333", "4444", "5555" }; // Array för PIN-koder.
         static string[][] userSavingsAcc = { // Jagged Array, eller "array of arrays" för sparkonton.
@@ -137,6 +139,11 @@ namespace Individuellt_projekt
                 static void TransferMoney(int userRegister)
                 {
                     Console.WriteLine("Välj ett konto att överföra pengar från: ");
+
+                    for (int i = 0; i < ; i++)
+                    {
+
+                    }
 
                 }
                 static void WithdrawMoney()
