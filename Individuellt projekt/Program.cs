@@ -1,4 +1,5 @@
 ﻿using System.Reflection.Metadata.Ecma335;
+using System.Xml;
 
 namespace Individuellt_projekt
 {
@@ -25,12 +26,18 @@ namespace Individuellt_projekt
         
         static void Main(string[] args)
         {
-            Console.BackgroundColor = ConsoleColor.Yellow; //Kod som välkomnar avändaren till banken.
+            Console.BackgroundColor = ConsoleColor.DarkRed; //Kod som välkomnar avändaren till banken.
             Console.ForegroundColor = ConsoleColor.Black;
             Console.WriteLine("------------------------");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("           $            ");
+            Console.ForegroundColor = ConsoleColor.Black;
             Console.WriteLine("                        ");
-            Console.WriteLine(" Välkommen till banken! ");
+            Console.WriteLine(" VÄLKOMMEN TILL BANKEN! ");
             Console.WriteLine("                        ");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("           $            ");
+            Console.ForegroundColor= ConsoleColor.Black;
             Console.WriteLine("------------------------");
             Console.ResetColor();
 
@@ -44,7 +51,7 @@ namespace Individuellt_projekt
            
             while (maxLogAttempts > 0)
             {
-                Console.Write("\nLogga in med din PIN-kod:");
+                Console.Write("\nLogga in med din PIN-kod: ");
                 string userPIN = Console.ReadLine();
 
                 for (int i = 0; i < userPinCodes.Length; i++)
@@ -77,7 +84,7 @@ namespace Individuellt_projekt
                
             }
             
-            static void BankMenu(int userRegister)
+            static void BankMenu(int userRegister) //Metod för menyn som användaren ser efter inloggning.
             {
                 Console.WriteLine("\n1. Se dina konton och saldo ");
                 Console.WriteLine("2. Överföring mellan konton");
@@ -86,11 +93,11 @@ namespace Individuellt_projekt
                 Console.Write("\nVälj ett alternativ: ");
 
 
-                try
+                try //Felhantering ifall användaren skriver in något annat än de 4 alternativen som finns i menyn.
                 {
                     int userChoice = Convert.ToInt32(Console.ReadLine());
 
-                    switch (userChoice)
+                    switch (userChoice)//Switch som möjliggör menyn.
                     {
                         case 1:
                             AccAndBalance(userRegister);
@@ -120,10 +127,12 @@ namespace Individuellt_projekt
                     Console.ResetColor();
                 }
 
-                static void AccAndBalance(int userRegister)
+                static void AccAndBalance(int userRegister) //Metod som skriver ut användarens konton saldo.
                 {
-                    Console.Clear();
-                    Console.WriteLine($"Konto och saldo för {userAccounts[userRegister]} ");
+                    Console.Clear();                    
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine($"Konton och saldo för: {userAccounts[userRegister]} ");
+                    Console.ResetColor();
                     for (int i = 0; i < userSavingsAcc[userRegister].Length; i++)
                     {                                               
                         Console.WriteLine($"{userSavingsAcc[userRegister][i]}: {userBalance[userRegister][i]} kr ");                        
@@ -134,28 +143,63 @@ namespace Individuellt_projekt
                     Console.ReadKey();                    
                 }
                 Console.Clear();
-                BankMenu(userRegister);
+                BankMenu(userRegister); //Återgår till menyn.
 
-                static void TransferMoney(int userRegister)
+                static void TransferMoney(int userRegister) //Metod för att överföra pengar från ett konto till ett annat.
                 {
-                    Console.WriteLine("Välj ett konto att överföra pengar från: ");
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Välj den siffra på det konto som du vill överföra pengar ifrån. ");
+                    Console.ResetColor();
 
-                    for (int i = 0; i < ; i++)
+                    for (int i = 0; i < userSavingsAcc[userRegister].Length; i++)
                     {
+                        Console.WriteLine($"{i + 1}. {userSavingsAcc[userRegister][i]} - Saldo: {userBalance[userRegister][i]} kr");//+1 för att göra programmet mer användarvänligt.
+                    }                                                                                                               //Om jag inte hade haft + 1, så hade användaren behövt skriva 0 om den vill välja det första alternativet.
+                                                                                                                                    //Det är för att arrays första element alltid har startvärdet 0.
+                    Console.Write("\n: ");
+                    int fromAccountRegister = Convert.ToInt32(Console.ReadLine()) - 1; //-1 för att konvertera tillbaka för att programmet ska funka som det ska.
 
+                   
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("\nVälj den siffra på det konto som du vill överföra pengar till.");
+                    Console.ResetColor();
+
+                    for (int i = 0; i < userSavingsAcc[userRegister].Length; i++)
+                    {
+                        Console.WriteLine($"{i + 1}. {userSavingsAcc[userRegister][i]} - Saldo: {userBalance[userRegister][i]} kr");
                     }
 
+                    Console.Write("\n: ");
+                    int toAccountRegister = Convert.ToInt32(Console.ReadLine()) - 1;
+
+                    Console.Write("\nAnge hur mycket pengar du vill överföra: ");
+                    double transferMoney = Convert.ToDouble(Console.ReadLine()); //double för att avändaren ska kunna skriva in mer än heltal.
+
+                    userBalance[userRegister][fromAccountRegister] -= transferMoney; //Här genomförs överföringen. Jag tar bort pengar från det första kontot.
+                    userBalance[userRegister][toAccountRegister] += transferMoney;//Och lägger till pengar i det andra kontot.
+                    
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.Green; //Visar att överföringen har lyckats, visar hur mycket pengar som nu finns på dessa konton. Ändrar till grön färg för att förtydliga.
+                    Console.WriteLine($"Överföringen av {transferMoney} kr från {userSavingsAcc[userRegister][fromAccountRegister]} till {userSavingsAcc[userRegister][toAccountRegister]} är fullbordad!");
+                    Console.ResetColor(); 
+                    
+                    Console.WriteLine($"\nNytt saldo för {userSavingsAcc[userRegister][fromAccountRegister]} : {userBalance[userRegister][fromAccountRegister]} kr");
+                    Console.WriteLine($"\nNytt saldo för {userSavingsAcc[userRegister][toAccountRegister]} : {userBalance[userRegister][toAccountRegister]} kr");
+                    
+                    BankMenu(userRegister); //Skickar tillbaka användaren till menyn.
+                    
                 }
                 static void WithdrawMoney()
                 {
-
+                    Console.WriteLine("Välj ett konto att ta ut pengar från: ");
                 }
-                static void LogOut()
+                static void LogOut() //Utloggningsmetod.
                 {
                     Console.ForegroundColor= ConsoleColor.Red;
-                    Console.WriteLine("Loggar ut...");
+                    Console.WriteLine("\nLoggar ut...");
                     Console.ResetColor();
-                    Thread.Sleep(3000);
+                    Thread.Sleep(2500);
                     Console.Clear();                    
                     LogIn();
                 }
