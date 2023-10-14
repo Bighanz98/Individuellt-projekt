@@ -1,4 +1,5 @@
-﻿using System.Reflection.Metadata.Ecma335;
+﻿using System.Reflection.Metadata;
+using System.Reflection.Metadata.Ecma335;
 using System.Xml;
 
 namespace Individuellt_projekt
@@ -106,7 +107,7 @@ namespace Individuellt_projekt
                             TransferMoney(userRegister);
                             break;
                         case 3:
-                            WithdrawMoney();
+                            WithdrawMoney(userRegister);
                             break;
                         case 4:
                             LogOut();
@@ -190,11 +191,38 @@ namespace Individuellt_projekt
                     BankMenu(userRegister); //Skickar tillbaka användaren till menyn.
                     
                 }
-                static void WithdrawMoney()
+                static void WithdrawMoney(int userRegister) //Metod för att ta ut pengar från ett konto.
                 {
+                    Console.Clear();          //Koden för att ta ut pengar ser ungefär likadan ut som TrasferMoney koden gör, skillnaden är att här behöver avändaren endast välja ett konto och belopp att ta ut.
+                    Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Välj ett konto att ta ut pengar från: ");
+                    Console.ResetColor();
+
+                    for (int i = 0; i < userSavingsAcc[userRegister].Length; i++)
+                    {
+                        Console.WriteLine($"{i + 1}. {userSavingsAcc[userRegister][i]} - Saldo: {userBalance[userRegister][i]} kr");
+                    }
+
+                    Console.Write("\n: ");
+                    int withdrawAccount = Convert.ToInt32(Console.ReadLine()) - 1;
+
+                    Console.Write("\nAnge hur mycket pengar du vill ta ut: ");
+                    double withdrawMoney = Convert.ToDouble(Console.ReadLine()); 
+
+                    userBalance[userRegister][withdrawAccount] -= withdrawMoney;
+
+
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.Green; 
+                    Console.WriteLine($"Uttag av {withdrawMoney} kr från {userSavingsAcc[userRegister][withdrawAccount]} är fullbordad!");
+                    Console.ResetColor();
+
+                    Console.WriteLine($"\nNytt saldo för {userSavingsAcc[userRegister][withdrawAccount]} : {userBalance[userRegister][withdrawAccount]} kr");
+
+                    BankMenu(userRegister);
                 }
-                static void LogOut() //Utloggningsmetod.
+
+                    static void LogOut() //Utloggningsmetod.
                 {
                     Console.ForegroundColor= ConsoleColor.Red;
                     Console.WriteLine("\nLoggar ut...");
