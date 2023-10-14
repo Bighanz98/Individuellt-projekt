@@ -8,8 +8,9 @@ namespace Individuellt_projekt
     {
         //Anton Hansson SUT23
 
-        static string[] userAccounts = { "Anton", "Adam", "Simon", "Petter", "Linus" }; // Array till användare.
+        static string[] userAccounts = { "Anton", "Adam", "Simon", "Petter", "Linus" }; // Array för användare.        
         static string[] userPinCodes = { "1111", "2222", "3333", "4444", "5555" }; // Array för PIN-koder.
+        static string[] userNames = { "Ant123", "Ada123", "Sim123", "Pet123", "Lin123" }; //Array för avändarnamn.
         static string[][] userSavingsAcc = { // Jagged Array, eller "array of arrays" för sparkonton.
             new string [] {"Sparkonto", "Semesterkonto", "Spelkonto", "Bensinkonto", "Oförutsägbara utgifter"},
             new string [] {"Sparkonto", "Semesterkonto", "Spelkonto", "Bensinkonto"},
@@ -17,12 +18,12 @@ namespace Individuellt_projekt
             new string [] {"Sparkonto", "Semesterkonto"},
             new string [] {"Sparkonto"}
         };
-        static double[][] userBalance = { //Jagged array för pengarna som finns på alla konton.
-            new double [] {50000, 10000, 2000, 3000, 5000},
-            new double [] {20000, 3000, 500, 1000},
-            new double [] {1000, 7000, 15000},
-            new double [] {100000, 30000},
-            new double [] {25000}
+        static decimal[][] userBalance = { //Jagged array för pengarna som finns på alla konton.
+            new decimal [] {50000.00m, 10000.00m, 2000.00m, 3000.00m, 5000.00m},
+            new decimal [] {20000.00m, 3000.00m, 500.00m, 1000.00m},
+            new decimal [] {1000.00m, 7000.00m, 15000.00m},
+            new decimal [] {100000.00m, 30000.00m},
+            new decimal [] {25000.00m}
         };
         
         static void Main(string[] args)
@@ -48,36 +49,39 @@ namespace Individuellt_projekt
         }
         static void LogIn() //Inloggningsmetod.
         {          
-            int maxLogAttempts = 3;
+            int maxLogAttempts = 3; //Sätter värdet till max 3 inloggningsförsök.
            
             while (maxLogAttempts > 0)
             {
-                Console.Write("\nLogga in med din PIN-kod: ");
+                Console.Write("\nAnge ditt användarnamn: "); //Ber användaren att skriva sitt användarnamn.
+                string userName = Console.ReadLine();
+
+                Console.Write("\nLogga in med din PIN-kod: "); //Ber användaren att skriva in sin PIN-kod.
                 string userPIN = Console.ReadLine();
 
-                for (int i = 0; i < userPinCodes.Length; i++)
+                for (int i = 0; i < userPinCodes.Length; i++) //Kan använda antingen userPinCodes eller userNames, då de har lika många element, alltså samma längd.
                 {
-                    if (userPinCodes[i] == userPIN)
+                    if (userNames[i] == userName && userPinCodes[i] == userPIN) //Om användaren skriver in rätt användarnamn, samt PIN-kod kommer den vidare till menyn.
                     {
                         Console.Clear();
-                        Console.WriteLine($"Hej, {userAccounts[i]}!");                      
+                        Console.WriteLine($"Hej, {userAccounts[i]}!"); //Säger hej till den inloggade användaren.                     
                         BankMenu(i);
                         return;                       
                     }
                 }
               maxLogAttempts--;
 
-                if (maxLogAttempts > 0) 
+                if (maxLogAttempts > 0)  //Skriv ut om användaren skriver in fel användarnamn, eller PIN-kod.
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"\nFelaktig PIN-kod! Försök igen, du har {maxLogAttempts} försök kvar");
+                    Console.WriteLine($"\nFelaktig PIN-kod eller anvädarnamn! Försök igen och glöm inte att först använda en stor bosktav, du har {maxLogAttempts} försök kvar");
                     Console.ResetColor();                    
                     
                 }
                 else
                 {
-                    Console.ForegroundColor= ConsoleColor.Red;
-                    Console.WriteLine("\nAjdå! Det verkar som att du har skrivit in fel PIN-kod för många gånger.");
+                    Console.ForegroundColor= ConsoleColor.Red; //Skrivs ut om användare har skrivit in fel användarnamn, eller PIN-kod fler än 3 gånger.
+                    Console.WriteLine("\nAjdå! Det verkar som att du har skrivit in fel PIN-kod eller användarnamn för många gånger.");
                     Console.WriteLine("Klicka på valfri tangent för att avsluta.");
                     Console.ResetColor();               
                     
@@ -98,23 +102,23 @@ namespace Individuellt_projekt
                 {
                     int userChoice = Convert.ToInt32(Console.ReadLine());
 
-                    switch (userChoice)//Switch som möjliggör menyn.
+                    switch (userChoice)//Switch som möjliggör bankmenyn. Använder mig av switch då det är smidigt och bra när man jobbar men menyval.
                     {
                         case 1:
-                            AccAndBalance(userRegister);
+                            AccAndBalance(userRegister); //Metod för att se konton och saldo.
                             break;
                         case 2:
-                            TransferMoney(userRegister);
+                            TransferMoney(userRegister); //Metod för att överföra pengar.
                             break;
                         case 3:
-                            WithdrawMoney(userRegister);
+                            WithdrawMoney(userRegister); //Metod för att ta ut pengar.
                             break;
                         case 4:
-                            LogOut();
+                            LogOut(); //Metod för att logga ut.
                             break;
                         default:
                             Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("Ogiltigt val. Välj mellan 1-4. ");
+                            Console.WriteLine("Ogiltigt val. Välj mellan 1-4. ");  //Skriver ut felmeddelande om användaren skriver något annat än 1-4.
                             Console.ResetColor();
                             break;
 
@@ -124,12 +128,12 @@ namespace Individuellt_projekt
                 catch (FormatException)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Ogiltigt val. Du måste skriva en siffra mellan 1-4.");
+                    Console.WriteLine("Ogiltigt val. Du måste skriva en siffra mellan 1-4.");//Skriver ut felmeddelande om användaren skriver något annat än en siffra.
                     Console.ResetColor();
                     
                 }
                 Console.ReadKey();
-                static void AccAndBalance(int userRegister) //Metod som skriver ut användarens konton saldo.
+                static void AccAndBalance(int userRegister) //Metod som skriver ut användarens konton och saldo.
                 {
                     Console.Clear();                    
                     Console.ForegroundColor = ConsoleColor.Yellow;
@@ -137,7 +141,7 @@ namespace Individuellt_projekt
                     Console.ResetColor();
                     for (int i = 0; i < userSavingsAcc[userRegister].Length; i++)
                     {                                               
-                        Console.WriteLine($"{userSavingsAcc[userRegister][i]}: {userBalance[userRegister][i]} kr ");                        
+                        Console.WriteLine($"{userSavingsAcc[userRegister][i]}: {userBalance[userRegister][i]} kr "); // Användarens konto, samt saldo skrivs ut.                     
                     }
                     Console.ForegroundColor= ConsoleColor.Green;
                     Console.WriteLine("\nKlicka enter för att komma till huvudmenyn.");
@@ -176,7 +180,7 @@ namespace Individuellt_projekt
                     int toAccountRegister = Convert.ToInt32(Console.ReadLine()) - 1;
 
                     Console.Write("\nAnge hur mycket pengar du vill överföra: ");
-                    double transferMoney = Convert.ToDouble(Console.ReadLine()); //double för att avändaren ska kunna skriva in mer än heltal.
+                    decimal transferMoney = Convert.ToDecimal(Console.ReadLine()); //decimal för att avändaren ska kunna skriva in mer än heltal.
 
                     userBalance[userRegister][fromAccountRegister] -= transferMoney; //Här genomförs överföringen. Jag tar bort pengar från det första kontot.
                     userBalance[userRegister][toAccountRegister] += transferMoney;//Och lägger till pengar i det andra kontot.
@@ -186,7 +190,7 @@ namespace Individuellt_projekt
                     Console.WriteLine($"Överföringen av {transferMoney} kr från {userSavingsAcc[userRegister][fromAccountRegister]} till {userSavingsAcc[userRegister][toAccountRegister]} är fullbordad!");
                     Console.ResetColor(); 
                     
-                    Console.WriteLine($"\nNytt saldo för {userSavingsAcc[userRegister][fromAccountRegister]} : {userBalance[userRegister][fromAccountRegister]} kr");
+                    Console.WriteLine($"\nNytt saldo för {userSavingsAcc[userRegister][fromAccountRegister]} : {userBalance[userRegister][fromAccountRegister]} kr"); //Här skrivs det nya uppdaterade saldot ut.
                     Console.WriteLine($"\nNytt saldo för {userSavingsAcc[userRegister][toAccountRegister]} : {userBalance[userRegister][toAccountRegister]} kr");
                     
                     BankMenu(userRegister); //Skickar tillbaka användaren till menyn.
@@ -208,17 +212,17 @@ namespace Individuellt_projekt
                     int withdrawAccount = Convert.ToInt32(Console.ReadLine()) - 1;
 
                     Console.Write("\nAnge hur mycket pengar du vill ta ut: ");
-                    double withdrawMoney = Convert.ToDouble(Console.ReadLine());
+                    decimal withdrawMoney = Convert.ToDecimal(Console.ReadLine());
 
 
-                    Console.Write("Bekräfta uttaget genom att skriva din PIN-kod: ");
+                    Console.Write("Bekräfta uttaget genom att skriva din PIN-kod: "); //Användaren måste skriva sin PIN-kod för att bekräfta sitt uttag.
                     string userPIN = Console.ReadLine();
-                    bool pinCorrect = false;
+                    bool correctPIN = false;
                    
                     
-                    for (int i = 0; i < userPinCodes.Length; i++)
+                    for (int i = 0; i < userPinCodes.Length; i++) 
                     {
-                        if (userPinCodes[i] == userPIN)
+                        if (userPinCodes[i] == userPIN) //Om PIN-koden är korrekt.
                         {
                             userBalance[userRegister][withdrawAccount] -= withdrawMoney;
                             Console.Clear();
@@ -226,11 +230,11 @@ namespace Individuellt_projekt
                             Console.WriteLine($"Uttag av {withdrawMoney} kr från {userSavingsAcc[userRegister][withdrawAccount]} är fullbordad!");
                             Console.ResetColor();
                             Console.WriteLine($"\nNytt saldo för {userSavingsAcc[userRegister][withdrawAccount]} : {userBalance[userRegister][withdrawAccount]} kr");
-                            pinCorrect = true;
+                            correctPIN = true;
                             break;
                         }                      
                     }
-                    if (!pinCorrect)
+                    if (!correctPIN) //Om PIN-koden inte är korrekt.
                     {
                         Console.ForegroundColor= ConsoleColor.Red;
                         Console.WriteLine("\nTyvärr, du skrev in fel PIN-kod.");
@@ -248,9 +252,9 @@ namespace Individuellt_projekt
                     static void LogOut() //Utloggningsmetod.
                 {
                     Console.ForegroundColor= ConsoleColor.Red;
-                    Console.WriteLine("\nLoggar ut...");
+                    Console.WriteLine("\nLoggar ut..."); 
                     Console.ResetColor();
-                    Thread.Sleep(2500);
+                    Thread.Sleep(2500); //Programmet stannar upp i en stund så att användaren kan se "Loggar ut" meddelandet.
                     Console.Clear();                    
                     LogIn();
                 }
