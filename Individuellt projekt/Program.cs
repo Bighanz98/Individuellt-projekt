@@ -208,18 +208,40 @@ namespace Individuellt_projekt
                     int withdrawAccount = Convert.ToInt32(Console.ReadLine()) - 1;
 
                     Console.Write("\nAnge hur mycket pengar du vill ta ut: ");
-                    double withdrawMoney = Convert.ToDouble(Console.ReadLine()); 
+                    double withdrawMoney = Convert.ToDouble(Console.ReadLine());
 
-                    userBalance[userRegister][withdrawAccount] -= withdrawMoney;
 
+                    Console.Write("Bekräfta uttaget genom att skriva din PIN-kod: ");
+                    string userPIN = Console.ReadLine();
+                    bool pinCorrect = false;
+                   
+                    
+                    for (int i = 0; i < userPinCodes.Length; i++)
+                    {
+                        if (userPinCodes[i] == userPIN)
+                        {
+                            userBalance[userRegister][withdrawAccount] -= withdrawMoney;
+                            Console.Clear();
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine($"Uttag av {withdrawMoney} kr från {userSavingsAcc[userRegister][withdrawAccount]} är fullbordad!");
+                            Console.ResetColor();
+                            Console.WriteLine($"\nNytt saldo för {userSavingsAcc[userRegister][withdrawAccount]} : {userBalance[userRegister][withdrawAccount]} kr");
+                            pinCorrect = true;
+                            break;
+                        }                      
+                    }
+                    if (!pinCorrect)
+                    {
+                        Console.ForegroundColor= ConsoleColor.Red;
+                        Console.WriteLine("\nTyvärr, du skrev in fel PIN-kod.");
+                        Console.ResetColor();
+                    }
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("\nKlicka enter för att komma till huvudmenyn.");
+                    Console.ResetColor();
+                    Console.ReadKey();
 
                     Console.Clear();
-                    Console.ForegroundColor = ConsoleColor.Green; 
-                    Console.WriteLine($"Uttag av {withdrawMoney} kr från {userSavingsAcc[userRegister][withdrawAccount]} är fullbordad!");
-                    Console.ResetColor();
-
-                    Console.WriteLine($"\nNytt saldo för {userSavingsAcc[userRegister][withdrawAccount]} : {userBalance[userRegister][withdrawAccount]} kr");
-
                     BankMenu(userRegister);
                 }
 
