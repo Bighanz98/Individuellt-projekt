@@ -121,13 +121,14 @@ namespace Individuellt_projekt
                     }
 
                 }
-                catch
+                catch (FormatException)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Ogiltigt val. Du måste skriva en siffra mellan 1-4.");
                     Console.ResetColor();
+                    
                 }
-
+                Console.ReadKey();
                 static void AccAndBalance(int userRegister) //Metod som skriver ut användarens konton saldo.
                 {
                     Console.Clear();                    
